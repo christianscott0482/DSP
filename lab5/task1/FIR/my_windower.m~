@@ -1,0 +1,50 @@
+%  ECE 486 Lab #5 - Task #1
+%
+%  Authors:
+%   Christian Auspland
+%   Matthew Blanchard
+%   Ben Grooms
+%   Hunter Smith
+% 
+%  This script calls a script that edits the default window paramiters.
+
+Window = evalin('base','Window');
+
+switch Window
+    case 'Bartlett'
+%         assignin('base','WindowAmplitudeBartlett',1.0);
+%         assignin('base','WindowLangthBartlett',64.0);
+        window_editor_bartlett
+    case 'Blackman'
+%         assignin('base','WindowAmplitudeBlackman',1.0);
+%         assignin('base','WindowLangthBlackman',64.0);
+        window_editor_blackman
+    case 'Boxcar'
+%         assignin('base','WindowAmplitudeBoxcar',1.0);
+%         assignin('base','WindowLangthBoxcar',64.0);
+        window_editor_boxcar
+    case 'Chebyshev'
+%         assignin('base','WindowSidelobeChebyshev',100);
+%         assignin('base','WindowLangthChebyshev',64.0);
+        window_editor_chebyshev
+    case 'Hamming'
+%         assignin('base','WindowAmplitudeHamming',1.0);
+%         assignin('base','WindowLangthHamming',64.0);
+%         assignin('base','WindowTypeHamming','symmetric');
+        window_editor_hamming
+    case 'Hann'
+        assignin('base','WindowAmplitudeHann',1.0);
+        assignin('base','WindowLangthHann',64.0);
+        assignin('base','WindowTypeHann','symmetric');
+        window_editor_hann
+    case 'Kaiser'
+        window_editor_kaiser
+    case 'Taylor'
+        assignin('base','WindowAmplitudeTaylor',1.0);
+        assignin('base','WindowLangthTaylor',64.0);
+        assignin('base','WindowBetaTaylor',5);
+        assignin('base','WindowSidelobeLevelTaylor',-30);
+        window_editor_taylor
+    otherwise
+       disp('Select A Window Method First!');
+end

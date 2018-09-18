@@ -1,0 +1,73 @@
+% ECE 486 Lab #3 - Task #4
+% Authors:
+%   Christian Auspland
+%   Matthew Blanchard
+%   Ben Grooms
+% 
+% This script plots/compares the ideal/actual frequency response of the
+% filter from Task 2
+
+f_samp = 50e+3;
+
+final_poles = [ ...
+    0.404069767441861 + 0.773255813953489i, ...
+    0.404069767441861 - 0.773255813953489i, ...
+    0.578488372093023 + 0.767441860465116i, ...
+    0.578488372093023 - 0.767441860465116i, ...
+   -0.148255813953488 + 0.982558139534884i, ...
+   -0.148255813953488 - 0.982558139534884i, ...
+    0.159883720930233 + 0.813953488372094i, ...
+    0.159883720930233 - 0.813953488372094i, ...
+   -0.0145348837209303 + 0.674418604651163i, ...
+   -0.0145348837209303 - 0.674418604651163i, ...
+];
+
+final_zeros = [ ...
+    0.886627906976744 + 0.308139534883721i, ...
+    0.886627906976744 - 0.308139534883721i, ...
+    0.787790697674418 + 0.552325581395349i, ...
+    0.787790697674418 - 0.552325581395349i, ...
+   -0.845930232558140 + 0.383720930232558i, ...
+   -0.845930232558140 - 0.383720930232558i, ...
+   -0.592185053361829 + 0.793357966226374i, ...
+   -0.592185053361829 - 0.793357966226374i, ...
+    0.264534883720930 + 0.813953488372093i, ...
+    0.264534883720930 - 0.813953488372093i, ...
+];
+
+% Create plot for the filter response
+fig_response_final = figure();
+ax_response_final = axes('Parent', fig_response_final);
+hold(ax_response_final, 'on');
+xlim(ax_response_final, [0 0.5] .* f_samp ./ 1e+3);
+ylim(ax_response_final, [-60 30]);
+xlabel(ax_response_final, 'Frequency (kHz)');
+ylabel(ax_response_final, 'Gain (dB)');
+title(ax_response_final, 'Frequency Response');
+grid(ax_response_final, 'on');
+
+% Plot the frequency response of the entire filter
+filt_num = poly(final_zeros);
+filt_den = poly(final_poles);
+k = 1 ./ filternorm(filt_num, filt_den);
+
+f = -0.5:1e-3:0.5;
+z = exp(-1j .* 2 .* pi .* f);
+f_real = f .* f_samp;
+H = k .* (polyval(filt_num, z) ./ polyval(filt_den, z));
+Hdb = 20 .* log10(abs(H));
+
+cla(ax_response_final);
+plot(ax_response_final, f_real ./ 1e+3, Hdb, 'r');
+
+real_response = csvread('freq_response.csv');
+plot(ax_response_final, real_response(:,1) ./ 1e+3, real_response(:,2), 'b');
+
+% Add regions of interest
+region_1 = fill(ax_response_final, [0, 0, 0.1, 0.1].*f_samp./1e+3, [-500, -40, -40, -500], 'k');
+set(region_1, 'facealpha', 0.2);
+region_2 = fill(ax_response_final, [0.15, 0.15, 0.2, 0.25, 0.25, 0.2].*f_samp./1e+3, [1, -1, -6, -1, 1, -4], 'k');
+set(region_2, 'facealpha', 0.2);
+region_3 = fill(ax_response_final, [0.35, 0.35, 0.5, 0.5].*f_samp./1e+3, [-500, -50, -50, -500], 'k');
+set(region_3, 'facealpha', 0.2);
+
